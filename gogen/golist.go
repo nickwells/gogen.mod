@@ -6,23 +6,26 @@ import (
 	"os/exec"
 )
 
-// GetPackage returns the package name - it does this by running the go
-// list command and gathering the output
-func GetPackage() string {
-	out, err := exec.Command("go", "list", "-f", "{{.Name}}").Output()
-	if err != nil {
-		fmt.Fprint(os.Stderr, "can't run the go list command", err)
-		os.Exit(1)
-	}
-	return string(out)
+// GetPackageOrDie returns the name of the current package. Any failure will
+// cause the program to exit.
+func GetPackageOrDie() string {
+	return runGoList("{{.Name}}")
 }
 
-// GetImportPath returns the importPath name - it does this by running the go
-// list command and gathering the output
-func GetImportPath() string {
-	out, err := exec.Command("go", "list", "-f", "{{.ImportPath}}").Output()
+// GetImportPathOrDie returns the import path of the current package. Any
+// failure will cause the program to exit.
+func GetImportPathOrDie() string {
+	return runGoList("{{.ImportPath}}")
+}
+
+// runGoList runs the go list command, capturing and returning the output. If
+// the command fails for any reason, the output is printed and the program
+// exits
+func runGoList(format string) string {
+	out, err := exec.Command("go", "list", "-f", format).CombinedOutput()
 	if err != nil {
-		fmt.Fprint(os.Stderr, "can't run the go list command", err)
+		fmt.Fprintln(os.Stderr, string(out))
+		fmt.Fprintln(os.Stderr, "The go list command failed: ", err)
 		os.Exit(1)
 	}
 	return string(out)

@@ -21,10 +21,11 @@ func MakeFileOrDie(filename string) *os.File {
 	return f
 }
 
-// PrintPreamble prints the package name and the introductory comments for
-// the file to be generated.
-func PrintPreamble(f *os.File, ps *param.PSet) {
-	fmt.Fprintln(f, "package", GetPackage())
+// PrintPreambleOrDie prints the package name and the introductory comments
+// for the file to be generated. If the package name cannot be obtained the
+// error is printed and the program exits
+func PrintPreambleOrDie(f *os.File, ps *param.PSet) {
+	fmt.Fprintln(f, "package", GetPackageOrDie())
 
 	fmt.Fprint(f, `
 /*
