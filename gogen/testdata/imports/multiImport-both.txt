@@ -1,0 +1,11 @@
+import (
+	"aa"
+	"bb"
+	"mm"
+	"xx"
+
+	"aa.com"
+	"bb.x"
+	"mm.z"
+	"xx.y"
+)
