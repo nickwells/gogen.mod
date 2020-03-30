@@ -1,6 +1,7 @@
 package gogen
 
 import (
+	"bytes"
 	"fmt"
 	"os"
 	"os/exec"
@@ -20,7 +21,7 @@ func GetImportPathOrDie() string {
 
 // runGoList runs the go list command, capturing and returning the output. If
 // the command fails for any reason, the output is printed and the program
-// exits
+// exits. Any white space at the start or end is removed.
 func runGoList(format string) string {
 	out, err := exec.Command("go", "list", "-f", format).CombinedOutput()
 	if err != nil {
@@ -28,5 +29,6 @@ func runGoList(format string) string {
 		fmt.Fprintln(os.Stderr, "The go list command failed: ", err)
 		os.Exit(1)
 	}
+	out = bytes.TrimSpace(out)
 	return string(out)
 }
