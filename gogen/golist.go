@@ -23,10 +23,11 @@ func GetImportPathOrDie() string {
 // the command fails for any reason, the output is printed and the program
 // exits. Any white space at the start or end is removed.
 func runGoList(format string) string {
-	out, err := exec.Command("go", "list", "-f", format).CombinedOutput()
+	out, err := exec.Command("go", "list", "-f", format).Output()
 	if err != nil {
+		fmt.Fprintln(os.Stderr, "Error")
 		fmt.Fprintln(os.Stderr, string(out))
-		fmt.Fprintln(os.Stderr, "The go list command failed: ", err)
+		fmt.Fprintln(os.Stderr, "The 'go list' command failed: ", err)
 		os.Exit(1)
 	}
 	out = bytes.TrimSpace(out)
