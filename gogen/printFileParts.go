@@ -6,8 +6,8 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/nickwells/param.mod/v4/param"
-	"github.com/nickwells/param.mod/v4/param/phelp"
+	"github.com/nickwells/param.mod/v5/param"
+	"github.com/nickwells/param.mod/v5/param/phelp"
 )
 
 // PrintPreambleOrDie prints the introductory comments for the file to be

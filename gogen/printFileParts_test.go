@@ -2,7 +2,6 @@ package gogen_test
 
 import (
 	"bytes"
-	"flag"
 	"testing"
 
 	"github.com/nickwells/gogen.mod/gogen"
@@ -14,14 +13,17 @@ const (
 	ImportsValsSubDir = "imports"
 )
 
-var updateImports = flag.Bool("upd-imports", false,
-	"update the files holding the import statements")
+var gfc = testhelper.GoldenFileCfg{
+	DirNames:    []string{testDataDir, ImportsValsSubDir},
+	Sfx:         "txt",
+	UpdFlagName: "upd-imports",
+}
+
+func init() {
+	gfc.AddUpdateFlag()
+}
 
 func TestPrintImports(t *testing.T) {
-	gfc := testhelper.GoldenFileCfg{
-		DirNames: []string{testDataDir, ImportsValsSubDir},
-		Sfx:      "txt",
-	}
 
 	testCases := []struct {
 		testhelper.ID
@@ -54,7 +56,6 @@ func TestPrintImports(t *testing.T) {
 	for _, tc := range testCases {
 		buf := new(bytes.Buffer)
 		gogen.PrintImports(buf, tc.imports...)
-		testhelper.CheckAgainstGoldenFile(t, tc.IDStr(), buf.Bytes(),
-			gfc.PathName(tc.ID.Name), *updateImports)
+		gfc.Check(t, tc.IDStr(), tc.ID.Name, buf.Bytes())
 	}
 }
