@@ -25,7 +25,7 @@ func TestRunGoList(t *testing.T) {
 	}
 
 	for _, tc := range testCases {
-		val := runGoList(tc.format)
+		val := runGoListOrDie(tc.format)
 		if val != tc.expectedVal {
 			t.Log(tc.IDStr())
 			t.Errorf("\t: unexpected value returned from RunGoList\n")
