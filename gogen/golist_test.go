@@ -9,26 +9,23 @@ import (
 func TestRunGoList(t *testing.T) {
 	testCases := []struct {
 		testhelper.ID
-		format      string
-		expectedVal string
+		format string
+		expVal string
 	}{
 		{
-			ID:          testhelper.MkID("Name"),
-			format:      "{{.Name}}",
-			expectedVal: "gogen",
+			ID:     testhelper.MkID("Name"),
+			format: "{{.Name}}",
+			expVal: "gogen",
 		},
 		{
-			ID:          testhelper.MkID("Name with spaces around"),
-			format:      "  \t{{.Name}} \n",
-			expectedVal: "gogen",
+			ID:     testhelper.MkID("Name with spaces around"),
+			format: "  \t{{.Name}} \n",
+			expVal: "gogen",
 		},
 	}
 
 	for _, tc := range testCases {
 		val := runGoListOrDie(tc.format)
-		if val != tc.expectedVal {
-			t.Log(tc.IDStr())
-			t.Errorf("\t: unexpected value returned from RunGoList\n")
-		}
+		testhelper.DiffString(t, tc.IDStr(), "package name", val, tc.expVal)
 	}
 }
