@@ -7,6 +7,12 @@ import (
 	"os/exec"
 )
 
+// GetModuleOrDie returns the name of the current module. Any failure will
+// cause the program to exit.
+func GetModuleOrDie() string {
+	return runGoListOrDie("{{.Module}}")
+}
+
 // GetPackageOrDie returns the name of the current package. Any failure will
 // cause the program to exit.
 func GetPackageOrDie() string {
@@ -31,6 +37,11 @@ func runGoListOrDie(format string) string {
 		os.Exit(1)
 	}
 	return out
+}
+
+// GetModule returns the name of the current module.
+func GetModule() (string, error) {
+	return runGoList("{{.Module}}")
 }
 
 // GetPackage returns the name of the current package.
