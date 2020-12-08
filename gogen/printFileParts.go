@@ -45,31 +45,50 @@ func PrintImports(f io.Writer, imps ...string) {
 		fmt.Fprintf(f, "import %q\n", imps[0])
 		return
 	}
+	stdLib, other := partitionImports(imps)
+
 	fmt.Fprintln(f, "import (")
+	addUniqueImport(f, stdLib)
+	if len(stdLib) > 0 {
+		fmt.Fprintln(f)
+	}
+	addUniqueImport(f, other)
+	fmt.Fprintln(f, ")")
+}
+
+// partitionImports splits the slice of imports into std libs and others and
+// sorts them read to be written out.
+func partitionImports(imps []string) ([]string, []string) {
 	var stdLib []string
 	var other []string
 
-	for _, i := range imps {
-		if i == "" {
+	for _, imp := range imps {
+		if imp == "" {
 			continue
 		}
-		parts := strings.Split(i, "/")
+		parts := strings.Split(imp, "/")
 		if strings.ContainsRune(parts[0], '.') {
-			other = append(other, i)
+			other = append(other, imp)
 		} else {
-			stdLib = append(stdLib, i)
+			stdLib = append(stdLib, imp)
 		}
 	}
 	sort.Strings(stdLib)
 	sort.Strings(other)
-	for _, i := range stdLib {
-		fmt.Fprintf(f, "\t%q\n", i)
+
+	return stdLib, other
+}
+
+// addUniqueImport writes the import entries. It suppresses duplicate
+// entries.
+func addUniqueImport(f io.Writer, imps []string) {
+	prev := ""
+
+	for _, imp := range imps {
+		if imp == prev {
+			continue
+		}
+		fmt.Fprintf(f, "\t%q\n", imp)
+		prev = imp
 	}
-	if len(stdLib) > 0 {
-		fmt.Fprintln(f)
-	}
-	for _, i := range other {
-		fmt.Fprintf(f, "\t%q\n", i)
-	}
-	fmt.Fprintln(f, ")")
 }
