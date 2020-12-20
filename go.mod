@@ -4,6 +4,6 @@ go 1.14
 
 require (
 	github.com/nickwells/check.mod v1.6.12
-	github.com/nickwells/param.mod/v5 v5.2.8
+	github.com/nickwells/param.mod/v5 v5.2.9
 	github.com/nickwells/testhelper.mod v1.14.0
 )
