@@ -24,7 +24,6 @@ func init() {
 }
 
 func TestPrintImports(t *testing.T) {
-
 	testCases := []struct {
 		testhelper.ID
 		imports []string
