@@ -1,6 +1,7 @@
 package gogen
 
 import (
+	"bytes"
 	"fmt"
 	"io"
 	"os"
@@ -10,12 +11,21 @@ import (
 
 // runGoOrDie runs the command and exits if it fails
 func runGoOrDie(cmd *exec.Cmd) {
+	var b bytes.Buffer
+	if cmd.Stdout == nil {
+		cmd.Stdout = &b
+	}
+	if cmd.Stderr == nil {
+		cmd.Stderr = &b
+	}
+
 	err := cmd.Run()
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "Couldn't exec the command")
 		fmt.Fprintf(os.Stderr, "\t%s %s\n",
-			cmd.Path, strings.Join(cmd.Args, " "))
+			cmd.Path, strings.Join(cmd.Args[1:], " "))
 		fmt.Fprintln(os.Stderr, "\tError:", err)
+		fmt.Fprintln(os.Stderr, b.String())
 		os.Exit(1)
 	}
 }
