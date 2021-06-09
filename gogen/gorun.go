@@ -9,8 +9,18 @@ import (
 	"strings"
 )
 
-// runGoOrDie runs the command and exits if it fails
-func runGoOrDie(cmd *exec.Cmd) {
+// exitOnErrorType controls whether or not to exit on program failure
+type exitOnErrorType int
+
+const (
+	exitOnErr exitOnErrorType = iota
+	dontExitOnErr
+)
+
+// runGo runs the command and reports any errors. If ctrl is exitOnErr it
+// exits if the program fails. It returns true if it succeeds, false
+// otherwise.
+func runGo(cmd *exec.Cmd, ctrl exitOnErrorType) bool {
 	var b bytes.Buffer
 	if cmd.Stdout == nil {
 		cmd.Stdout = &b
@@ -21,17 +31,20 @@ func runGoOrDie(cmd *exec.Cmd) {
 
 	err := cmd.Run()
 	if err != nil {
-		fmt.Fprintln(os.Stderr, "Couldn't exec the command")
-		fmt.Fprintf(os.Stderr, "\t%s %s\n",
-			cmd.Path, strings.Join(cmd.Args[1:], " "))
-		fmt.Fprintln(os.Stderr, "\tError:", err)
+		command := cmd.Path + " " + strings.Join(cmd.Args[1:], " ")
+		fmt.Fprintln(os.Stderr, "Command failed:", command)
+		fmt.Fprintln(os.Stderr, "         Error:", err)
 		fmt.Fprintln(os.Stderr, b.String())
-		os.Exit(1)
+		if ctrl == exitOnErr {
+			os.Exit(1)
+		}
+		return false
 	}
+	return true
 }
 
 // ExecGoCmd will exec the go program with the supplied arguments. If it
-// detects an error it will report it and exit
+// detects an error it will report it and exit.
 func ExecGoCmd(ioMode CmdIOType, args ...string) {
 	cmd := exec.Command("go", args...)
 	if ioMode == ShowCmdIO {
@@ -39,16 +52,42 @@ func ExecGoCmd(ioMode CmdIOType, args ...string) {
 		cmd.Stdout = os.Stdout
 		cmd.Stderr = os.Stderr
 	}
-	runGoOrDie(cmd)
+	runGo(cmd, exitOnErr)
 }
 
 // ExecGoCmdCaptureOutput will exec the go program with the supplied
-// arguments. The command's Stdout is connected to the supplied
-// writer if it is not nil.
+// arguments. The command's Stdout is connected to the supplied writer if it
+// is not nil. If it detects an error it will report it and exit.
 func ExecGoCmdCaptureOutput(w io.Writer, args ...string) {
 	cmd := exec.Command("go", args...)
 	if w != nil {
 		cmd.Stdout = w
 	}
-	runGoOrDie(cmd)
+	runGo(cmd, exitOnErr)
+}
+
+// ExecGoCmdNoExit will exec the go program with the supplied arguments. If
+// it detects an error it will report it and return false. Otherwise it
+// returns true
+func ExecGoCmdNoExit(ioMode CmdIOType, args ...string) bool {
+	cmd := exec.Command("go", args...)
+	if ioMode == ShowCmdIO {
+		cmd.Stdin = os.Stdin
+		cmd.Stdout = os.Stdout
+		cmd.Stderr = os.Stderr
+	}
+	return runGo(cmd, dontExitOnErr)
+}
+
+// ExecGoCmdCaptureOutputNoExit will exec the go program with the supplied
+// arguments. The command's Stdout is connected to the supplied
+// writer if it is not nil. If
+// it detects an error it will report it and return false. Otherwise it
+// returns true
+func ExecGoCmdCaptureOutputNoExit(w io.Writer, args ...string) bool {
+	cmd := exec.Command("go", args...)
+	if w != nil {
+		cmd.Stdout = w
+	}
+	return runGo(cmd, dontExitOnErr)
 }
