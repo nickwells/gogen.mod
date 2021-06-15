@@ -64,7 +64,7 @@ func GetImportPath() (string, error) {
 // the command fails for any reason, the error is returned. Any white space
 // at the start or end is removed.
 func runGoList(format string) (string, error) {
-	out, err := exec.Command("go", "list", "-f", format).Output()
+	out, err := exec.Command(goCmdName, "list", "-f", format).Output()
 	if err != nil {
 		return string(out), err
 	}
