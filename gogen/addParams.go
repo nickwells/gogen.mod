@@ -4,7 +4,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/nickwells/check.mod/check"
+	"github.com/nickwells/check.mod/v2/check"
 	"github.com/nickwells/param.mod/v5/param"
 	"github.com/nickwells/param.mod/v5/param/psetter"
 )
@@ -34,15 +34,14 @@ func AddParams(fileName *string, makeFile *bool) func(ps *param.PSet) error {
 			psetter.Pathname{
 				Value: fileName,
 				Checks: []check.String{
-					check.StringLenGT(3),
-					check.StringHasSuffix(".go"),
-					check.StringNot(
-						check.StringHasSuffix("_test.go"),
+					check.StringLength[string](check.ValGT[int](3)),
+					check.StringHasSuffix[string](".go"),
+					check.Not[string](check.StringHasSuffix[string]("_test.go"),
 						"a test file"),
 				},
 			},
 			"set the name of the output file",
-			param.AltName("f"),
+			param.AltNames("f"),
 			param.Attrs(fileNameOptAttr),
 		)
 
