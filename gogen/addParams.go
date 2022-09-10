@@ -34,9 +34,9 @@ func AddParams(fileName *string, makeFile *bool) func(ps *param.PSet) error {
 			psetter.Pathname{
 				Value: fileName,
 				Checks: []check.String{
-					check.StringLength[string](check.ValGT[int](3)),
+					check.StringLength[string](check.ValGT(3)),
 					check.StringHasSuffix[string](".go"),
-					check.Not[string](check.StringHasSuffix[string]("_test.go"),
+					check.Not(check.StringHasSuffix[string]("_test.go"),
 						"a test file"),
 				},
 			},
