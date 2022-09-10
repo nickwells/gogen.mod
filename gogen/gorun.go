@@ -20,7 +20,7 @@ const (
 // runGo runs the command and reports any errors. If ctrl is exitOnErr it
 // exits if the program fails. It returns true if it succeeds, false
 // otherwise.
-func runGo(cmd *exec.Cmd, ctrl exitOnErrorType) bool {
+func runGo(cmd *exec.Cmd, ctrl exitOnErrorType, ioMode CmdIOType) bool {
 	var b bytes.Buffer
 	if cmd.Stdout == nil {
 		cmd.Stdout = &b
@@ -31,10 +31,12 @@ func runGo(cmd *exec.Cmd, ctrl exitOnErrorType) bool {
 
 	err := cmd.Run()
 	if err != nil {
-		command := cmd.Path + " " + strings.Join(cmd.Args[1:], " ")
-		fmt.Fprintln(os.Stderr, "Command failed:", command)
-		fmt.Fprintln(os.Stderr, "         Error:", err)
-		fmt.Fprintln(os.Stderr, b.String())
+		if ioMode != NoCmdFailIO {
+			command := cmd.Path + " " + strings.Join(cmd.Args[1:], " ")
+			fmt.Fprintln(os.Stderr, "Command failed:", command)
+			fmt.Fprintln(os.Stderr, "         Error:", err)
+			fmt.Fprintln(os.Stderr, b.String())
+		}
 		if ctrl == exitOnErr {
 			os.Exit(1)
 		}
@@ -52,7 +54,7 @@ func ExecGoCmd(ioMode CmdIOType, args ...string) {
 		cmd.Stdout = os.Stdout
 		cmd.Stderr = os.Stderr
 	}
-	runGo(cmd, exitOnErr)
+	runGo(cmd, exitOnErr, ioMode)
 }
 
 // ExecGoCmdCaptureOutput will exec the go program with the supplied
@@ -63,7 +65,7 @@ func ExecGoCmdCaptureOutput(w io.Writer, args ...string) {
 	if w != nil {
 		cmd.Stdout = w
 	}
-	runGo(cmd, exitOnErr)
+	runGo(cmd, exitOnErr, ShowCmdIO)
 }
 
 // ExecGoCmdNoExit will exec the go program with the supplied arguments. If
@@ -76,7 +78,7 @@ func ExecGoCmdNoExit(ioMode CmdIOType, args ...string) bool {
 		cmd.Stdout = os.Stdout
 		cmd.Stderr = os.Stderr
 	}
-	return runGo(cmd, dontExitOnErr)
+	return runGo(cmd, dontExitOnErr, ioMode)
 }
 
 // ExecGoCmdCaptureOutputNoExit will exec the go program with the supplied
@@ -89,5 +91,5 @@ func ExecGoCmdCaptureOutputNoExit(w io.Writer, args ...string) bool {
 	if w != nil {
 		cmd.Stdout = w
 	}
-	return runGo(cmd, dontExitOnErr)
+	return runGo(cmd, dontExitOnErr, ShowCmdIO)
 }
