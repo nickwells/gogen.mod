@@ -71,15 +71,19 @@ func partitionImports(imps []string) ([]string, []string) {
 	var stdLib []string
 	var other []string
 
-	for _, imp := range imps {
-		if imp == "" {
+	for _, v := range imps {
+		if v == "" {
 			continue
 		}
-		parts := strings.Split(imp, "/")
-		if strings.ContainsRune(parts[0], '.') {
-			other = append(other, imp)
+		_, imp, ok := strings.Cut(v, "=")
+		if !ok {
+			imp = v
+		}
+		first, _, _ := strings.Cut(imp, "/")
+		if strings.ContainsRune(first, '.') {
+			other = append(other, v)
 		} else {
-			stdLib = append(stdLib, imp)
+			stdLib = append(stdLib, v)
 		}
 	}
 	sort.Strings(stdLib)
@@ -93,11 +97,16 @@ func partitionImports(imps []string) ([]string, []string) {
 func addUniqueImport(f io.Writer, imps []string) {
 	prev := ""
 
-	for _, imp := range imps {
-		if imp == prev {
+	for _, v := range imps {
+		if v == prev {
 			continue
 		}
-		fmt.Fprintf(f, "\t%q\n", imp)
-		prev = imp
+		id, imp, ok := strings.Cut(v, "=")
+		if ok {
+			fmt.Fprintf(f, "\t%s %q\n", id, imp)
+		} else {
+			fmt.Fprintf(f, "\t%q\n", v)
+		}
+		prev = v
 	}
 }
