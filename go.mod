@@ -4,7 +4,7 @@ go 1.18
 
 require (
 	github.com/nickwells/check.mod/v2 v2.1.9
-	github.com/nickwells/param.mod/v5 v5.15.9
+	github.com/nickwells/param.mod/v5 v5.16.0
 	github.com/nickwells/testhelper.mod/v2 v2.1.2
 )
 
@@ -22,6 +22,6 @@ require (
 	github.com/nickwells/twrap.mod v1.5.0 // indirect
 	github.com/nickwells/xdg.mod v1.0.9 // indirect
 	golang.org/x/exp v0.0.0-20230321023759-10a507213a29 // indirect
-	golang.org/x/sys v0.6.0 // indirect
-	golang.org/x/term v0.6.0 // indirect
+	golang.org/x/sys v0.7.0 // indirect
+	golang.org/x/term v0.7.0 // indirect
 )
