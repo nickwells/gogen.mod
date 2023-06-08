@@ -14,11 +14,19 @@ func TestExecGoCmdNoExit(t *testing.T) {
 		testhelper.ID
 		dir       string
 		expResult bool
+		expStdout string
+		expStderr string
 	}{
 		{
 			ID:        testhelper.MkID("Bad code"),
 			dir:       "testdata/code/badCode",
 			expResult: false,
+			expStderr: "Command failed: /usr/local/go/bin/go build\n" +
+				"         Error: exit status 1\n" +
+				"# badCode\n" +
+				"./bad.go:7:7: syntax error:" +
+				" unexpected is at end of statement\n" +
+				"\n",
 		},
 		{
 			ID:        testhelper.MkID("Good code"),
@@ -35,11 +43,25 @@ func TestExecGoCmdNoExit(t *testing.T) {
 	for _, tc := range testCases {
 		cdOrFatal(t, tc.dir)
 
+		fakeIO, err := testhelper.NewStdioFromString("")
+		if err != nil {
+			t.Fatal(err)
+		}
+
 		buildSucceeded := gogen.ExecGoCmdNoExit(gogen.NoCmdIO, "build")
 		testhelper.DiffBool(t, tc.IDStr(), "", buildSucceeded, tc.expResult)
 		if buildSucceeded {
 			_ = os.Remove(filepath.Base(tc.dir))
 		}
+		stdout, stderr, err := fakeIO.Done()
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		testhelper.DiffString(t, tc.IDStr(), "stdout",
+			string(stdout), tc.expStdout)
+		testhelper.DiffString(t, tc.IDStr(), "stderr",
+			string(stderr), tc.expStderr)
 
 		cdOrFatal(t, initialDir)
 	}
