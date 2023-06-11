@@ -4,7 +4,7 @@ go 1.18
 
 require (
 	github.com/nickwells/check.mod/v2 v2.1.10
-	github.com/nickwells/param.mod/v5 v5.18.0
+	github.com/nickwells/param.mod/v5 v5.19.0
 	github.com/nickwells/testhelper.mod/v2 v2.2.0
 )
 
