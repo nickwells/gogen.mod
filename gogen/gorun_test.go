@@ -3,6 +3,7 @@ package gogen_test
 import (
 	"os"
 	"path/filepath"
+	"regexp"
 	"testing"
 
 	"github.com/nickwells/gogen.mod/gogen"
@@ -21,7 +22,7 @@ func TestExecGoCmdNoExit(t *testing.T) {
 			ID:        testhelper.MkID("Bad code"),
 			dir:       "testdata/code/badCode",
 			expResult: false,
-			expStderr: "Command failed: /usr/local/go/bin/go build\n" +
+			expStderr: "Command failed: go build\n" +
 				"         Error: exit status 1\n" +
 				"# badCode\n" +
 				"./bad.go:7:7: syntax error:" +
@@ -40,6 +41,8 @@ func TestExecGoCmdNoExit(t *testing.T) {
 		t.Fatalf("Couldn't get the initial working directory: %v ", err)
 	}
 
+	editStderr := regexp.MustCompile("Command failed: .*go build")
+
 	for _, tc := range testCases {
 		cdOrFatal(t, tc.dir)
 
@@ -57,6 +60,8 @@ func TestExecGoCmdNoExit(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
+		stderr = editStderr.ReplaceAll(stderr,
+			[]byte("Command failed: go build"))
 
 		testhelper.DiffString(t, tc.IDStr(), "stdout",
 			string(stdout), tc.expStdout)
