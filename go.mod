@@ -6,7 +6,7 @@ toolchain go1.21.0
 
 require (
 	github.com/nickwells/check.mod/v2 v2.1.13
-	github.com/nickwells/param.mod/v6 v6.1.2
+	github.com/nickwells/param.mod/v6 v6.1.3
 	github.com/nickwells/testhelper.mod/v2 v2.3.0
 )
 
