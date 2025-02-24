@@ -15,13 +15,16 @@ func MakeFileOrDie(filename string) *os.File {
 	mustNotHaveSuffix(filename, "_test.go")
 
 	packageName := GetPackageOrDie()
+
 	f, err := os.Create(filename)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "Error creating the Go file:", err)
 		fmt.Fprintln(os.Stderr, "      filename:", filename)
 		os.Exit(1)
 	}
+
 	fmt.Fprintln(f, "package "+packageName)
+
 	return f
 }
 
@@ -32,13 +35,16 @@ func MakeTestFileOrDie(filename string) *os.File {
 	mustHaveSuffix(filename, "_test.go")
 
 	packageName := GetPackageOrDie()
+
 	f, err := os.Create(filename)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "Error creating the Go file:", err)
 		fmt.Fprintln(os.Stderr, "      filename:", filename)
 		os.Exit(1)
 	}
+
 	fmt.Fprintln(f, "package "+packageName+"_test")
+
 	return f
 }
 
@@ -48,6 +54,7 @@ func mustHaveSuffix(filename, suffix string) {
 	if !strings.HasSuffix(filename, suffix) {
 		fmt.Fprintln(os.Stderr, "Error the file must end with:", suffix)
 		fmt.Fprintln(os.Stderr, "      filename:", filename)
+
 		os.Exit(1)
 	}
 }
@@ -58,6 +65,7 @@ func mustNotHaveSuffix(filename, suffix string) {
 	if strings.HasSuffix(filename, suffix) {
 		fmt.Fprintln(os.Stderr, "Error the file must not end with:", suffix)
 		fmt.Fprintln(os.Stderr, "      filename:", filename)
+
 		os.Exit(1)
 	}
 }

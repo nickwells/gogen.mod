@@ -33,15 +33,19 @@ func runGoListOrDie(format string) string {
 	out, err := runGoList(format)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "Error: The 'go list' command failed: ", err)
+
 		var eErr *exec.ExitError
 		if errors.As(err, &eErr) {
 			if len(out) > 0 {
 				fmt.Fprintln(os.Stderr, out)
 			}
+
 			fmt.Fprintln(os.Stderr, string(eErr.Stderr))
 		}
+
 		os.Exit(1)
 	}
+
 	return out
 }
 
@@ -68,6 +72,8 @@ func runGoList(format string) (string, error) {
 	if err != nil {
 		return string(out), err
 	}
+
 	out = bytes.TrimSpace(out)
+
 	return string(out), nil
 }

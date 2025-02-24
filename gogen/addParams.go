@@ -30,11 +30,13 @@ func AddParams(fileName *string, makeFile *bool) func(ps *param.PSet) error {
 	}
 
 	return func(ps *param.PSet) error {
+		const minFileNameLength = 4
+
 		fileNameParam := ps.Add("file-name",
 			psetter.Pathname{
 				Value: fileName,
 				Checks: []check.String{
-					check.StringLength[string](check.ValGT(3)),
+					check.StringLength[string](check.ValGE(minFileNameLength)),
 					check.StringHasSuffix[string](".go"),
 					check.Not(check.StringHasSuffix[string]("_test.go"),
 						"a test file"),
@@ -62,12 +64,14 @@ func AddParams(fileName *string, makeFile *bool) func(ps *param.PSet) error {
 					"only one of %q and %q may be set at the same time",
 					fileNameParam.Name(), noFileParam.Name())
 			}
+
 			if *makeFile && *fileName == "" {
 				return fmt.Errorf(
 					"if the file is to be made the name must be set,"+
 						" use %q to set it",
 					fileNameParam.Name())
 			}
+
 			return nil
 		})
 

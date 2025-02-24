@@ -13,6 +13,7 @@ func SetGoCmdName(newPath string) error {
 	if err == nil {
 		goCmdName = newPath
 	}
+
 	return err
 }
 

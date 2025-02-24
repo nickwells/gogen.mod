@@ -50,9 +50,12 @@ func TestExecGoCmdNoExit(t *testing.T) {
 				t.Log("cleanup failed")
 				t.Fatal(err)
 			}
+
 			t.Error(err)
+
 			continue
 		}
+
 		cdOrFatal(t, tmpDir)
 
 		fakeIO, err := testhelper.NewStdioFromString("")
@@ -63,13 +66,16 @@ func TestExecGoCmdNoExit(t *testing.T) {
 		buildSucceeded := gogen.ExecGoCmdNoExit(gogen.NoCmdIO, "build")
 		testhelper.DiffBool(t, tc.IDStr(), "build status",
 			buildSucceeded, tc.expResult)
+
 		if buildSucceeded {
 			_ = os.Remove(filepath.Base(tc.dir))
 		}
+
 		stdout, stderr, err := fakeIO.Done()
 		if err != nil {
 			t.Fatal(err)
 		}
+
 		stderr = editStderr.ReplaceAll(stderr,
 			[]byte("Command failed: go build"))
 
@@ -79,6 +85,7 @@ func TestExecGoCmdNoExit(t *testing.T) {
 			string(stderr), tc.expStderr)
 
 		cdOrFatal(t, initialDir)
+
 		if cleanup != nil {
 			if err := cleanup(); err != nil {
 				t.Log("cleanup failed")

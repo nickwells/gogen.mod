@@ -22,9 +22,11 @@ const (
 // otherwise.
 func runGo(cmd *exec.Cmd, ctrl exitOnErrorType, ioMode CmdIOType) bool {
 	var b bytes.Buffer
+
 	if cmd.Stdout == nil {
 		cmd.Stdout = &b
 	}
+
 	if cmd.Stderr == nil {
 		cmd.Stderr = &b
 	}
@@ -37,11 +39,14 @@ func runGo(cmd *exec.Cmd, ctrl exitOnErrorType, ioMode CmdIOType) bool {
 			fmt.Fprintln(os.Stderr, "         Error:", err)
 			fmt.Fprintln(os.Stderr, b.String())
 		}
+
 		if ctrl == exitOnErr {
 			os.Exit(1)
 		}
+
 		return false
 	}
+
 	return true
 }
 
@@ -49,11 +54,13 @@ func runGo(cmd *exec.Cmd, ctrl exitOnErrorType, ioMode CmdIOType) bool {
 // detects an error it will report it and exit.
 func ExecGoCmd(ioMode CmdIOType, args ...string) {
 	cmd := exec.Command(goCmdName, args...)
+
 	if ioMode == ShowCmdIO {
 		cmd.Stdin = os.Stdin
 		cmd.Stdout = os.Stdout
 		cmd.Stderr = os.Stderr
 	}
+
 	runGo(cmd, exitOnErr, ioMode)
 }
 
@@ -62,9 +69,11 @@ func ExecGoCmd(ioMode CmdIOType, args ...string) {
 // is not nil. If it detects an error it will report it and exit.
 func ExecGoCmdCaptureOutput(w io.Writer, args ...string) {
 	cmd := exec.Command(goCmdName, args...)
+
 	if w != nil {
 		cmd.Stdout = w
 	}
+
 	runGo(cmd, exitOnErr, ShowCmdIO)
 }
 
@@ -78,6 +87,7 @@ func ExecGoCmdNoExit(ioMode CmdIOType, args ...string) bool {
 		cmd.Stdout = os.Stdout
 		cmd.Stderr = os.Stderr
 	}
+
 	return runGo(cmd, dontExitOnErr, ioMode)
 }
 
@@ -91,5 +101,6 @@ func ExecGoCmdCaptureOutputNoExit(w io.Writer, args ...string) bool {
 	if w != nil {
 		cmd.Stdout = w
 	}
+
 	return runGo(cmd, dontExitOnErr, ShowCmdIO)
 }
