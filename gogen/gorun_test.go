@@ -26,7 +26,7 @@ func TestExecGoCmdNoExit(t *testing.T) {
 				"         Error: exit status 1\n" +
 				"# badCode\n" +
 				"./bad.go:7:7: syntax error:" +
-				" unexpected is at end of statement\n" +
+				" unexpected name is at end of statement\n" +
 				"\n",
 		},
 		{
