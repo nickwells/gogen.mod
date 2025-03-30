@@ -16,7 +16,7 @@ func MakeFileOrDie(filename string) *os.File {
 
 	packageName := GetPackageOrDie()
 
-	f, err := os.Create(filename)
+	f, err := os.Create(filename) //nolint:gosec
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "Error creating the Go file:", err)
 		fmt.Fprintln(os.Stderr, "      filename:", filename)
@@ -36,7 +36,7 @@ func MakeTestFileOrDie(filename string) *os.File {
 
 	packageName := GetPackageOrDie()
 
-	f, err := os.Create(filename)
+	f, err := os.Create(filename) //nolint:gosec
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "Error creating the Go file:", err)
 		fmt.Fprintln(os.Stderr, "      filename:", filename)

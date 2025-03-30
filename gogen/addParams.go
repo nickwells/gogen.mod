@@ -21,7 +21,7 @@ import (
 func AddParams(fileName *string, makeFile *bool) func(ps *param.PSet) error {
 	if !*makeFile {
 		panic(errors.New(
-			"The makeFile parameter must point to a value set to true"))
+			"the makeFile parameter must point to a value set to true"))
 	}
 
 	fileNameOptAttr := param.DontShowInStdUsage

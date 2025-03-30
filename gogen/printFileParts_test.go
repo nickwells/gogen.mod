@@ -55,6 +55,6 @@ func TestPrintImports(t *testing.T) {
 	for _, tc := range testCases {
 		buf := new(bytes.Buffer)
 		gogen.PrintImports(buf, tc.imports...)
-		gfc.Check(t, tc.IDStr(), tc.ID.Name, buf.Bytes())
+		gfc.Check(t, tc.IDStr(), tc.Name, buf.Bytes())
 	}
 }
