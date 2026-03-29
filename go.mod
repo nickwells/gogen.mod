@@ -4,12 +4,12 @@ go 1.26.0
 
 require (
 	github.com/nickwells/check.mod/v2 v2.1.28
-	github.com/nickwells/param.mod/v7 v7.1.0
+	github.com/nickwells/param.mod/v7 v7.1.2
 	github.com/nickwells/testhelper.mod/v2 v2.5.0
 )
 
 require (
-	github.com/nickwells/col.mod/v6 v6.0.3 // indirect
+	github.com/nickwells/col.mod/v6 v6.1.0 // indirect
 	github.com/nickwells/strdist.mod/v2 v2.1.1 // indirect
 	github.com/nickwells/tempus.mod v1.2.10 // indirect
 )
