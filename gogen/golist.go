@@ -34,8 +34,7 @@ func runGoListOrDie(format string) string {
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "Error: The 'go list' command failed: ", err)
 
-		var eErr *exec.ExitError
-		if errors.As(err, &eErr) {
+		if eErr, ok := errors.AsType[*exec.ExitError](err); ok {
 			if len(out) > 0 {
 				fmt.Fprintln(os.Stderr, out)
 			}
