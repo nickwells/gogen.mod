@@ -4,7 +4,7 @@ go 1.26.0
 
 require (
 	github.com/nickwells/check.mod/v2 v2.1.29
-	github.com/nickwells/param.mod/v7 v7.2.3
+	github.com/nickwells/param.mod/v7 v7.2.4
 	github.com/nickwells/testhelper.mod/v2 v2.6.1
 )
 
