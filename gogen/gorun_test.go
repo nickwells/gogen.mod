@@ -7,7 +7,7 @@ import (
 	"testing"
 
 	"github.com/nickwells/gogen.mod/gogen"
-	"github.com/nickwells/testhelper.mod/v2/testhelper"
+	"github.com/nickwells/testhelper.mod/v3/testhelper"
 )
 
 func TestExecGoCmdNoExit(t *testing.T) {

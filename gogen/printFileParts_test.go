@@ -5,22 +5,14 @@ import (
 	"testing"
 
 	"github.com/nickwells/gogen.mod/gogen"
-	"github.com/nickwells/testhelper.mod/v2/testhelper"
+	"github.com/nickwells/testhelper.mod/v3/testhelper"
 )
 
-const (
-	testDataDir       = "testdata"
-	ImportsValsSubDir = "imports"
-)
-
-var gfc = testhelper.GoldenFileCfg{
-	DirNames:    []string{testDataDir, ImportsValsSubDir},
-	Sfx:         "txt",
-	UpdFlagName: "upd-imports",
-}
+var gfc = testhelper.GoldenFileCfg{ID: "imports"}
 
 func init() {
 	gfc.AddUpdateFlag()
+	gfc.AddKeepBadResultsFlag()
 }
 
 func TestPrintImports(t *testing.T) {

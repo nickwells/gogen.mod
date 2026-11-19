@@ -3,7 +3,7 @@ package gogen
 import (
 	"testing"
 
-	"github.com/nickwells/testhelper.mod/v2/testhelper"
+	"github.com/nickwells/testhelper.mod/v3/testhelper"
 )
 
 func TestRunGoList(t *testing.T) {
